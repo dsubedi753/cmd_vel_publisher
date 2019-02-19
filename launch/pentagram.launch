@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="cmd_vel_publisher" type="pentagram.py" name="pentagram"  output="screen">
+    </node>
+</launch>
