@@ -6,56 +6,26 @@ from geometry_msgs.msg import Twist
 rospy.init_node('Pentagram')
 print("Pentagram Trajectory")
 
-def rotate(r):
-    t0 = rospy.Time.now().to_sec()
-    t = 0
-    mover.angular.z = -0.5
-    r = float(r)/180 * math.pi
-    while 0.5* t < r:
-        pub.publish(mover)
-        t1 = rospy.Time.now().to_sec()
-        t = t1-t0
-        print("Angle",t, r*t)
-        rate.sleep()
-    mover.angular.z = 0
-    pub.publish(mover)
-
-def mov_loc(v):
-    v = float(v)/5
-    t0 = rospy.Time.now().to_sec()
-    t = 0
-    mover.linear.x = v
-    while v*t < 2:
-        pub.publish(mover)
-        t1 = rospy.Time.now().to_sec()
-        t = t1-t0
-        print("Dist:",t,v*t)
-        rate.sleep()
-    mover.linear.x = 0
-    pub.publish(mover)
-
 pub = rospy.Publisher('/cmd_vel', Twist, queue_size=6)
-rate = rospy.Rate(10)
+rate = rospy.Rate(1)
 mover = Twist()
 
-while True:
-  t0 = rospy.Time.now().to_sec()
-  if t0 != 0: #initial time
-    break
+r = 0.8*math.pi/2
+t = 0
 
-rotate(63)
-mov_loc(1)
-rotate(144)
-mov_loc(2)
-rotate(144)
-mov_loc(3)
-rotate(144)
-mov_loc(4)
-rotate(144)
-mov_loc(5)
-
+mover.angular.z =0
+mover.linear.x = 1
 
 while not rospy.is_shutdown():
-  
-  #pub.publish(mover)
-  rate.sleep()
+    if t == 2 and mover.angular.z == 0:
+        t = 0
+        mover.linear.x = 0
+        mover.angular.z = r
+    if t == 2 and mover.linear.x == 0:
+        t = 0
+        mover.angular.z = 0
+        mover.linear.x = 1
+    pub.publish(mover)
+    t=t+1
+    rate.sleep()
+    
