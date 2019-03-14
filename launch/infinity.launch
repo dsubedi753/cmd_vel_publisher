@@ -1,4 +1,0 @@
-<launch>
-    <node pkg="cmd_vel_publisher" type="infinity_node.py" name="Infinity"  output="screen">
-    </node>
-</launch>
